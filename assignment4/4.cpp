@@ -8,18 +8,19 @@ int main() {
     getline(cin, str);
 
     queue<char> q;
-    int freq[256] = {0};  // frequency of all characters
+    int freq[256] = {0};  // all ascii value total
 
     cout << "First non-repeating characters: ";
 
-    for (char ch : str) {
+    for (char ch : str) {//for (element_type element : container) { ... }
+
         if (ch == ' ') continue; // ignore spaces
 
-        freq[ch]++;      // increase frequency
+        freq[ch]++;      // increase frequency or aski value is found
         q.push(ch);      // add to queue
 
         // remove characters from front if repeated
-        while (!q.empty() && freq[q.front()] > 1) {
+        while (!q.empty() && freq[q.front()] > 1) {//freq [qfront ]count the no of times the character at front of queue has appeared
             q.pop();
         }
 

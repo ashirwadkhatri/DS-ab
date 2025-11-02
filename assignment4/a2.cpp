@@ -3,10 +3,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Queue elements after sortedIndex are 
-// already sorted. This function returns
-// index of minimum element from front to
-// sortedIndex
+
 int minIndex(queue<int> &q, int sortedIndex)
 {
     int min_index = -1;

@@ -17,7 +17,7 @@ int main() {
     for(int i=0;i<n2;i++)
         cin >> B[i][0] >> B[i][1] >> B[i][2];
 
-    int C[n1+n2][3]; // contains result of addition of A and B i.e triplets of n1 and n2 and triplets can be found by row-index, column-index and value format of any matrix of m*n
+    int C[n1+n2][3]; // max triplets // contains result of addition of A and B i.e triplets of n1 and n2 and triplets can be found by row-index, column-index and value format of any matrix of m*n
     int k=0; // tracks how many elements is in c (row column and value )
 
     // Copy A into C
