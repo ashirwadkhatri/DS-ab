@@ -1,60 +1,54 @@
 #include <iostream>
+#include <climits>
 using namespace std;
 
+// Node structure for binary tree
 struct Node {
     int data;
     Node* left;
     Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = nullptr;
+    }
 };
 
-// Function to create a new node
-Node* newNode(int value) {
-    Node* temp = new Node;
-    temp->data = value;
-    temp->left = temp->right = nullptr;
-    return temp;
-}
-
-// Utility function to check BST property
-bool isBSTUtil(Node* root, int minVal, int maxVal) {
+// Helper function to check BST property
+bool isBSTUtil(Node* root, long long minVal, long long maxVal) {
     if (root == nullptr)
         return true;
 
-    // Current node must be greater than min and smaller than max
+    // If current node violates min/max constraint → not BST
     if (root->data <= minVal || root->data >= maxVal)
         return false;
 
-    // Recursively check left and right subtrees
-    return (isBSTUtil(root->left, minVal, root->data) &&
-            isBSTUtil(root->right, root->data, maxVal));
+    // Check subtrees recursively with updated constraints
+    return isBSTUtil(root->left, minVal, root->data) &&
+           isBSTUtil(root->right, root->data, maxVal);
 }
 
-// Main function to check if binary tree is BST
+// Function to check if tree is BST
 bool isBST(Node* root) {
-    return isBSTUtil(root, INT_MIN, INT_MAX);
+    return isBSTUtil(root, LLONG_MIN, LLONG_MAX);
 }
 
-// Helper to print result
-void checkBST(Node* root) {
-    if (isBST(root))
-        cout << "The given tree is a Binary Search Tree (BST)" << endl;
-    else
-        cout << "The given tree is NOT a Binary Search Tree" << endl;
-}
-
-// Example usage
+// Sample driver code
 int main() {
-    Node* root = newNode(8);
-    root->left = newNode(3);
-    root->right = newNode(10);
-    root->left->left = newNode(1);
-    root->left->right = newNode(6);
-    root->left->right->left = newNode(4);
-    root->left->right->right = newNode(7);
-    root->right->right = newNode(14);
-    root->right->right->left = newNode(13);
+   
 
-    checkBST(root);
+    Node* root = new Node(4);
+    root->left = new Node(2);
+    root->right = new Node(6);
+    root->left->left = new Node(1);
+    root->left->right = new Node(3);
+    root->right->left = new Node(5);
+    root->right->right = new Node(7);
+
+    if (isBST(root))
+        cout << "The given binary tree is a BST.\n";
+    else
+        cout << "The given binary tree is NOT a BST.\n";
 
     return 0;
 }
