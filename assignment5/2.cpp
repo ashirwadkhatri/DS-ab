@@ -1,92 +1,94 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+using namespace std;
 
-// Structure for linked list node
-struct Node {
+class Node {
+public:
     int data;
-    struct Node* next;
+    Node* next;
+
+    Node(int value) {
+        data = value;
+        next = nullptr;
+    }
 };
 
-// Function to create a new node
-struct Node* newNode(int data) {
-    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
-    temp->data = data;
-    temp->next = NULL;
-    return temp;
-}
+// Insert at end
+void append(Node*& head, int data) {
+    Node* temp = new Node(data);
 
-// Function to insert node at end
-void append(struct Node** head_ref, int data) {
-    struct Node* temp = newNode(data);
-    if (*head_ref == NULL) {
-        *head_ref = temp;
+    if (head == nullptr) {
+        head = temp;
         return;
     }
-    struct Node* last = *head_ref;
-    while (last->next != NULL)
+
+    Node* last = head;
+    while (last->next != nullptr)
         last = last->next;
+
     last->next = temp;
 }
 
-// Function to print linked list
-void printList(struct Node* head) {
-    while (head != NULL) {
-        printf("%d", head->data);
-        if (head->next != NULL) printf("->");
+// Print list
+void printList(Node* head) {
+    while (head != nullptr) {
+        cout << head->data;
+        if (head->next != nullptr) cout << "->";
         head = head->next;
     }
-    printf("\n");
+    cout << endl;
 }
 
-// Function to count and delete all occurrences of key
-int deleteKey(struct Node** head_ref, int key) {
-    struct Node* current = *head_ref;
-    struct Node* prev = NULL;
+// Delete all occurrences of key
+int deleteKey(Node*& head, int key) {
+    Node* current = head;
+    Node* prev = nullptr;
     int count = 0;
 
-    while (current != NULL) {
+    while (current != nullptr) {
         if (current->data == key) {
             count++;
-            // Deleting current node
-            if (prev == NULL) {
-                // deleting head node
-                *head_ref = current->next;
-                free(current);
-                current = *head_ref;
-            } else {
+
+            // If deleting head
+            if (prev == nullptr) {
+                head = current->next;
+                delete current;
+                current = head;
+            } 
+            else {
                 prev->next = current->next;
-                free(current);
+                delete current;
                 current = prev->next;
             }
-        } else {
+        }
+        else {
             prev = current;
             current = current->next;
         }
     }
+
     return count;
 }
 
-// Main function
 int main() {
-    struct Node* head = NULL;
+    Node* head = nullptr;
 
-    // Creating linked list: 1->2->1->2->1->3->1
-    append(&head, 1);
-    append(&head, 2);
-    append(&head, 1);
-    append(&head, 2);
-    append(&head, 1);
-    append(&head, 3);
-    append(&head, 1);
+    // Create linked list: 1->2->1->2->1->3->1
+    append(head, 1);
+    append(head, 2);
+    append(head, 1);
+    append(head, 2);
+    append(head, 1);
+    append(head, 3);
+    append(head, 1);
 
-    int key = 1;
-    printf("Original Linked List: ");
+    cout << "Original List: ";
     printList(head);
 
-    int count = deleteKey(&head, key);
+    int key = 1;
+    int count = deleteKey(head, key);
 
-    printf("Count: %d\n", count);
-    printf("Updated Linked List: ");
+    cout << "Count: " << count << endl;
+    cout << "Updated List: ";
     printList(head);
 
     return 0;
