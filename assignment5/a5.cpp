@@ -1,43 +1,41 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+using namespace std;
 
-// Structure for a node in polynomial linked list
-struct Node {
-    int coeff;  // coefficient
-    int pow;    // power
-    struct Node* next;
+// Node class for polynomial linked list
+class Node {
+public:
+    int coeff;  // Coefficient
+    int pow;    // Power
+    Node* next;
+
+    Node(int c, int p) {
+        coeff = c;
+        pow = p;
+        next = nullptr;
+    }
 };
 
-// Function to create a new node
-struct Node* newNode(int coeff, int pow) {
-    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
-    temp->coeff = coeff;
-    temp->pow = pow;
-    temp->next = NULL;
-    return temp;
-}
-
 // Function to add two polynomials
-struct Node* addPolynomial(struct Node* poly1, struct Node* poly2) {
-    struct Node* result = NULL;
-    struct Node* tail = NULL;
+Node* addPolynomial(Node* poly1, Node* poly2) {
+    Node* result = nullptr;
+    Node* tail = nullptr;
 
-    while (poly1 != NULL && poly2 != NULL) {
-        struct Node* temp = NULL;
+    while (poly1 != nullptr && poly2 != nullptr) {
+        Node* temp = nullptr;
 
         if (poly1->pow > poly2->pow) {
-            temp = newNode(poly1->coeff, poly1->pow);
+            temp = new Node(poly1->coeff, poly1->pow);
             poly1 = poly1->next;
         } else if (poly1->pow < poly2->pow) {
-            temp = newNode(poly2->coeff, poly2->pow);
+            temp = new Node(poly2->coeff, poly2->pow);
             poly2 = poly2->next;
         } else { // Same power → add coefficients
-            temp = newNode(poly1->coeff + poly2->coeff, poly1->pow);
+            temp = new Node(poly1->coeff + poly2->coeff, poly1->pow);
             poly1 = poly1->next;
             poly2 = poly2->next;
         }
 
-        if (result == NULL) {
+        if (result == nullptr) {
             result = tail = temp;
         } else {
             tail->next = temp;
@@ -46,14 +44,14 @@ struct Node* addPolynomial(struct Node* poly1, struct Node* poly2) {
     }
 
     // Add remaining terms
-    while (poly1 != NULL) {
-        tail->next = newNode(poly1->coeff, poly1->pow);
+    while (poly1 != nullptr) {
+        tail->next = new Node(poly1->coeff, poly1->pow);
         tail = tail->next;
         poly1 = poly1->next;
     }
 
-    while (poly2 != NULL) {
-        tail->next = newNode(poly2->coeff, poly2->pow);
+    while (poly2 != nullptr) {
+        tail->next = new Node(poly2->coeff, poly2->pow);
         tail = tail->next;
         poly2 = poly2->next;
     }
@@ -62,35 +60,36 @@ struct Node* addPolynomial(struct Node* poly1, struct Node* poly2) {
 }
 
 // Function to print polynomial
-void printPoly(struct Node* poly) {
-    while (poly != NULL) {
-        printf("%dx^%d", poly->coeff, poly->pow);
-        if (poly->next != NULL)
-            printf(" + ");
+void printPoly(Node* poly) {
+    while (poly != nullptr) {
+        cout << poly->coeff << "x^" << poly->pow;
+        if (poly->next != nullptr)
+            cout << " + ";
         poly = poly->next;
     }
-    printf("\n");
+    cout << endl;
 }
 
+// Driver code
 int main() {
     // First polynomial: 5x^2 + 4x + 2
-    struct Node* poly1 = newNode(5, 2);
-    poly1->next = newNode(4, 1);
-    poly1->next->next = newNode(2, 0);
+    Node* poly1 = new Node(5, 2);
+    poly1->next = new Node(4, 1);
+    poly1->next->next = new Node(2, 0);
 
     // Second polynomial: 5x^3 + 2x + 1
-    struct Node* poly2 = newNode(5, 3);
-    poly2->next = newNode(2, 1);
-    poly2->next->next = newNode(1, 0);
+    Node* poly2 = new Node(5, 3);
+    poly2->next = new Node(2, 1);
+    poly2->next->next = new Node(1, 0);
 
-    printf("Polynomial 1: ");
+    cout << "Polynomial 1: ";
     printPoly(poly1);
-    printf("Polynomial 2: ");
+    cout << "Polynomial 2: ";
     printPoly(poly2);
 
-    struct Node* sum = addPolynomial(poly1, poly2);
+    Node* sum = addPolynomial(poly1, poly2);
 
-    printf("Sum: ");
+    cout << "Sum: ";
     printPoly(sum);
 
     return 0;
