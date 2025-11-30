@@ -1,23 +1,21 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+using namespace std;
 
-// Structure for linked list node
-struct Node {
+// Node class
+class Node {
+public:
     int data;
-    struct Node* next;
+    Node* next;
+
+    Node(int val) {
+        data = val;
+        next = nullptr;
+    }
 };
 
-// Create a new node
-struct Node* newNode(int data) {
-    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
-    temp->data = data;
-    temp->next = NULL;
-    return temp;
-}
-
 // Function to detect and remove loop using Floyd's Cycle Detection algorithm
-void removeLoop(struct Node* head) {
-    struct Node *slow = head, *fast = head;
+void removeLoop(Node* head) {
+    Node *slow = head, *fast = head;
 
     // Step 1: Detect loop using Floyd's algorithm
     while (slow && fast && fast->next) {
@@ -46,33 +44,33 @@ void removeLoop(struct Node* head) {
         }
 
         // Step 4: Break the loop
-        fast->next = NULL;
+        fast->next = nullptr;
     }
 }
 
 // Function to print the linked list
-void printList(struct Node* head) {
-    while (head != NULL) {
-        printf("%d -> ", head->data);
+void printList(Node* head) {
+    while (head != nullptr) {
+        cout << head->data << " -> ";
         head = head->next;
     }
-    printf("NULL\n");
+    cout << "NULL" << endl;
 }
 
 // Driver code
 int main() {
-    struct Node* head = newNode(1);
-    head->next = newNode(2);
-    head->next->next = newNode(3);
-    head->next->next->next = newNode(4);
-    head->next->next->next->next = newNode(5);
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    head->next->next->next = new Node(4);
+    head->next->next->next->next = new Node(5);
 
     // Creating a loop: 5->next = 3
     head->next->next->next->next->next = head->next->next;
 
     removeLoop(head);
 
-    printf("Linked List after removing loop:\n");
+    cout << "Linked List after removing loop:" << endl;
     printList(head);
 
     return 0;
