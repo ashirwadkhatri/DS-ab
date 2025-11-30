@@ -1,42 +1,39 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+using namespace std;
 
-// Structure for linked list node
-struct Node {
+// Node class
+class Node {
+public:
     int data;
-    struct Node* next;
+    Node* next;
+
+    Node(int val) {
+        data = val;
+        next = nullptr;
+    }
 };
 
-// Function to create new node
-struct Node* newNode(int data) {
-    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
-    temp->data = data;
-    temp->next = NULL;
-    return temp;
-}
-
 // Function to print linked list
-void printList(struct Node* head) {
-    while (head != NULL) {
-        printf("%d", head->data);
-        if (head->next)
-            printf("->");
+void printList(Node* head) {
+    while (head != nullptr) {
+        cout << head->data;
+        if (head->next) cout << "->";
         head = head->next;
     }
-    printf("\n");
+    cout << endl;
 }
 
 // Function to reverse k nodes
-struct Node* reverseKGroup(struct Node* head, int k) {
-    struct Node* curr = head;
-    struct Node* prev = NULL;
-    struct Node* next = NULL;
+Node* reverseKGroup(Node* head, int k) {
+    Node* curr = head;
+    Node* prev = nullptr;
+    Node* next = nullptr;
     int count = 0;
 
     // Step 1: Check if there are at least k nodes left
-    struct Node* temp = head;
+    Node* temp = head;
     int nodeCount = 0;
-    while (temp != NULL && nodeCount < k) {
+    while (temp != nullptr && nodeCount < k) {
         temp = temp->next;
         nodeCount++;
     }
@@ -44,7 +41,7 @@ struct Node* reverseKGroup(struct Node* head, int k) {
         return head;  // Less than k nodes, no reversal
 
     // Step 2: Reverse first k nodes
-    while (curr != NULL && count < k) {
+    while (curr != nullptr && count < k) {
         next = curr->next;
         curr->next = prev;
         prev = curr;
@@ -53,7 +50,7 @@ struct Node* reverseKGroup(struct Node* head, int k) {
     }
 
     // Step 3: Recursively reverse remaining list
-    if (next != NULL)
+    if (next != nullptr)
         head->next = reverseKGroup(next, k);
 
     // prev is new head of the reversed group
@@ -62,26 +59,24 @@ struct Node* reverseKGroup(struct Node* head, int k) {
 
 // Main function
 int main() {
-    struct Node* head = NULL;
-
     // Create linked list: 1->2->3->4->5->6->7->8
-    head = newNode(1);
-    head->next = newNode(2);
-    head->next->next = newNode(3);
-    head->next->next->next = newNode(4);
-    head->next->next->next->next = newNode(5);
-    head->next->next->next->next->next = newNode(6);
-    head->next->next->next->next->next->next = newNode(7);
-    head->next->next->next->next->next->next->next = newNode(8);
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    head->next->next->next = new Node(4);
+    head->next->next->next->next = new Node(5);
+    head->next->next->next->next->next = new Node(6);
+    head->next->next->next->next->next->next = new Node(7);
+    head->next->next->next->next->next->next->next = new Node(8);
 
     int k = 3;
 
-    printf("Original List: ");
+    cout << "Original List: ";
     printList(head);
 
     head = reverseKGroup(head, k);
 
-    printf("Reversed in groups of %d: ", k);
+    cout << "Reversed in groups of " << k << ": ";
     printList(head);
 
     return 0;
