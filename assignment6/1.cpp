@@ -1,144 +1,140 @@
-#include <stdio.h>
+#include <iostream>
+using namespace std;
 
 #define MAX 10
 
-struct Node {
-    int data;
-    struct Node *next;
-};
+class CircularLinkedList {
+private:
+    struct Node {
+        int data;
+        Node *next;
+    };
 
-struct Node nodes[MAX];   // static memory
-struct Node *freeList = NULL; 
-struct Node *head = NULL;
+    Node nodes[MAX];     // static memory
+    Node *freeList;      // free node list
+    Node *head;          // start of circular list
 
-// Initialize the free list
-void initialize() {
-    for (int i = 0; i < MAX - 1; i++)
-        nodes[i].next = &nodes[i + 1];
-    nodes[MAX - 1].next = NULL;
-    freeList = &nodes[0];
-}
+public:
+    // Constructor initializes free list and head
+    CircularLinkedList() {
+        for (int i = 0; i < MAX - 1; i++)
+            nodes[i].next = &nodes[i + 1];
+        nodes[MAX - 1].next = NULL;
 
-// Get a free node
-struct Node* getNode() {
-    if (freeList == NULL) {
-        printf("No free nodes available!\n");
-        return NULL;
-    }
-    struct Node *temp = freeList;
-    freeList = freeList->next;
-    temp->next = NULL;
-    return temp;
-}
-
-// Free a node (return it to free list)
-void freeNode(struct Node *node) {
-    node->next = freeList;
-    freeList = node;
-}
-
-// Insert at end
-void insertAtEnd(int data) {
-    struct Node *newNode = getNode();
-    if (newNode == NULL) return;
-    newNode->data = data;
-
-    if (head == NULL) {
-        head = newNode;
-        head->next = head;
-    } else {
-        struct Node *temp = head;
-        while (temp->next != head)
-            temp = temp->next;
-        temp->next = newNode;
-        newNode->next = head;
-    }
-}
-
-// Delete a node by value
-void deleteNode(int value) {
-    if (head == NULL) {
-        printf("List empty!\n");
-        return;
+        freeList = &nodes[0];
+        head = NULL;
     }
 
-    struct Node *curr = head, *prev = NULL;
+    // Allocate node from free list
+    Node* getNode() {
+        if (freeList == NULL) {
+            cout << "No free nodes available!\n";
+            return NULL;
+        }
+        Node *temp = freeList;
+        freeList = freeList->next;
+        temp->next = NULL;
+        return temp;
+    }
 
-    do {
-        if (curr->data == value) {
-            if (curr == head) {
-                struct Node *last = head;
-                while (last->next != head)
-                    last = last->next;
+    // Return node to free list
+    void freeNode(Node *node) {
+        node->next = freeList;
+        freeList = node;
+    }
 
-                if (head->next == head)
-                    head = NULL;
-                else {
-                    head = head->next;
-                    last->next = head;
-                }
-            } else {
-                prev->next = curr->next;
-            }
-            freeNode(curr);
-            printf("Deleted %d.\n", value);
+    // Insert at end
+    void insertAtEnd(int data) {
+        Node *newNode = getNode();
+        if (newNode == NULL) return;
+
+        newNode->data = data;
+
+        if (head == NULL) {
+            head = newNode;
+            head->next = head;   // circular link
+        } else {
+            Node *temp = head;
+            while (temp->next != head)
+                temp = temp->next;
+
+            temp->next = newNode;
+            newNode->next = head;
+        }
+    }
+
+    // Delete node by value
+    void deleteNode(int value) {
+        if (head == NULL) {
+            cout << "List empty!\n";
             return;
         }
-        prev = curr;
-        curr = curr->next;
-    } while (curr != head);
 
-    printf("Node %d not found!\n", value);
-}
+        Node *curr = head, *prev = NULL;
 
-// Display the list
-void display() {
-    if (head == NULL) {
-        printf("List empty!\n");
-        return;
+        do {
+            if (curr->data == value) {
+                if (curr == head) {
+                    Node *last = head;
+                    while (last->next != head)
+                        last = last->next;
+
+                    if (head->next == head) {
+                        // Only one node
+                        head = NULL;
+                    } else {
+                        head = head->next;
+                        last->next = head;
+                    }
+                } 
+                else {
+                    prev->next = curr->next;
+                }
+
+                freeNode(curr);
+                cout << "Deleted " << value << ".\n";
+                return;
+            }
+
+            prev = curr;
+            curr = curr->next;
+        } while (curr != head);
+
+        cout << "Node " << value << " not found!\n";
     }
 
-    struct Node *temp = head;
-    printf("Circular Linked List: ");
-    do {
-        printf("%d ", temp->data);
-        temp = temp->next;
-    } while (temp != head);
-    printf("\n");
-}
+    // Display circular list
+    void display() {
+        if (head == NULL) {
+            cout << "List empty!\n";
+            return;
+        }
+
+        Node *temp = head;
+        cout << "Circular Linked List: ";
+        do {
+            cout << temp->data << " ";
+            temp = temp->next;
+        } while (temp != head);
+        cout << "\n";
+    }
+};
 
 int main() {
-    initialize();
+    CircularLinkedList cll;
 
     int choice, data;
 
-    while (1) {
-        printf("\n--- Circular Linked List (Static with ->) ---\n");
-        printf("1. Insert at End\n");
-        printf("2. Delete Node\n");
-        printf("3. Display\n");
-        printf("4. Exit\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+    while (true) {
+        cout << "\n--- Circular Linked List (Static with ->) ---\n";
+        cout << "1. Insert at End\n";
+        cout << "2. Delete Node\n";
+        cout << "3. Display\n";
+        cout << "4. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
 
         switch (choice) {
         case 1:
-            printf("Enter data: ");
-            scanf("%d", &data);
-            insertAtEnd(data);
-            break;
-        case 2:
-            printf("Enter value to delete: ");
-            scanf("%d", &data);
-            deleteNode(data);
-            break;
-        case 3:
-            display();
-            break;
-        case 4:
-            return 0;
-        default:
-            printf("Invalid choice!\n");
-        }
-    }
-}
+            cout << "Enter data: ";
+            cin >> data;
