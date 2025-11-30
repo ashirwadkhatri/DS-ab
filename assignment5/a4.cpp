@@ -1,41 +1,39 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+using namespace std;
 
-// Structure for a linked list node
-struct Node {
+// Node class
+class Node {
+public:
     int data;
-    struct Node* next;
+    Node* next;
+
+    Node(int val) {
+        data = val;
+        next = nullptr;
+    }
 };
 
-// Function to create a new node
-struct Node* newNode(int data) {
-    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
-    temp->data = data;
-    temp->next = NULL;
-    return temp;
-}
-
 // Function to print the linked list
-void printList(struct Node* head) {
-    while (head != NULL) {
-        printf("%d", head->data);
-        if (head->next != NULL)
-            printf("->");
+void printList(Node* head) {
+    while (head != nullptr) {
+        cout << head->data;
+        if (head->next != nullptr)
+            cout << "->";
         head = head->next;
     }
-    printf("\n");
+    cout << endl;
 }
 
 // Function to rotate linked list left by k nodes
-struct Node* rotateLeft(struct Node* head, int k) {
-    if (head == NULL || k == 0)
+Node* rotateLeft(Node* head, int k) {
+    if (head == nullptr || k == 0)
         return head;
 
-    struct Node* curr = head;
+    Node* curr = head;
 
     // Step 1: Count total nodes
     int count = 1;
-    while (curr->next != NULL) {
+    while (curr->next != nullptr) {
         curr = curr->next;
         count++;
     }
@@ -47,34 +45,35 @@ struct Node* rotateLeft(struct Node* head, int k) {
     k = k % count;  // Handle k > count
     int stepsToNewHead = k;
 
-    struct Node* newTail = head;
+    Node* newTail = head;
     for (int i = 1; i < stepsToNewHead; i++)
         newTail = newTail->next;
 
-    struct Node* newHead = newTail->next;
+    Node* newHead = newTail->next;
 
     // Step 4: Break the circular link
-    newTail->next = NULL;
+    newTail->next = nullptr;
 
     return newHead;
 }
 
 // Main function
 int main() {
-    struct Node* head = newNode(1);
-    head->next = newNode(2);
-    head->next->next = newNode(3);
-    head->next->next->next = newNode(4);
-    head->next->next->next->next = newNode(5);
+    // Create linked list: 1->2->3->4->5
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    head->next->next->next = new Node(4);
+    head->next->next->next->next = new Node(5);
 
     int k = 2;
 
-    printf("Original List: ");
+    cout << "Original List: ";
     printList(head);
 
     head = rotateLeft(head, k);
 
-    printf("List after rotating left by %d: ", k);
+    cout << "List after rotating left by " << k << ": ";
     printList(head);
 
     return 0;
